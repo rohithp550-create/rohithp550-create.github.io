@@ -1,14 +1,24 @@
 import './App.css';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Dashboard from './components/Dashboard';
 import ExpenseEntry from './components/ExpenseEntry';
 import ExpenseList from './components/ExpenseList';
 import { ExpenseProvider } from './context/ExpenseContext';
+import Settings from './components/Settings';
+import { initializeGemini } from './utils/geminiAI';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
+
+  useEffect(() => {
+    // Initialize Gemini AI on app startup if API key exists
+    const savedKey = localStorage.getItem('gemini_api_key');
+    if (savedKey) {
+      initializeGemini(savedKey);
+    }
+  }, []);
 
   return (
     <ExpenseProvider>
@@ -43,17 +53,24 @@ function App() {
           >
             📝 History
           </button>
+          <button
+            className={`nav-button ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+          >
+            ⚙️ Settings
+          </button>
         </nav>
 
         <main className="app-main">
           {activeTab === 'dashboard' && <Dashboard />}
           {activeTab === 'add' && <ExpenseEntry />}
           {activeTab === 'history' && <ExpenseList />}
+          {activeTab === 'settings' && <Settings />}
         </main>
 
         <footer className="app-footer">
           <p>
-            Built with React • AI-Powered Insights • Your data stays local
+            Built with React • Gemini AI • Your data stays local
           </p>
         </footer>
       </div>

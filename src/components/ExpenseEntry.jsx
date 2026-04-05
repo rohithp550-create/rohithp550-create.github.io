@@ -2,6 +2,7 @@ import './ExpenseEntry.css';
 
 import React, { useState } from 'react';
 import { categorizeExpense, getAllCategories } from '../utils/aiCategorizer';
+import { categorizeExpenseWithGemini, isGeminiInitialized } from '../utils/geminiAI';
 
 import { useExpenses } from '../context/ExpenseContext';
 
@@ -12,8 +13,10 @@ const ExpenseEntry = () => {
   const [category, setCategory] = useState('');
   const [showIncomeModal, setShowIncomeModal] = useState(false);
   const [tempIncome, setTempIncome] = useState(monthlyIncome.toString());
+  const [isCategorizingWithAI, setIsCategorizingWithAI] = useState(false);
+  const [aiSuggestion, setAiSuggestion] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!description.trim() || !amount || parseFloat(amount) <= 0) {
@@ -21,8 +24,23 @@ const ExpenseEntry = () => {
       return;
     }
 
-    const suggestedCategory = categorizeExpense(description);
-    const finalCategory = category || suggestedCategory;
+    let finalCategory = category;
+
+    // Try Gemini AI categorization first if available and no manual category selected
+    if (!category && isGeminiInitialized()) {
+      setIsCategorizingWithAI(true);
+      try {
+        finalCategory = await categorizeExpenseWithGemini(description, parseFloat(amount));
+      } catch (error) {
+        console.error('Gemini categorization failed, using fallback:', error);
+        finalCategory = categorizeExpense(description);
+      } finally {
+        setIsCategorizingWithAI(false);
+      }
+    } else if (!category) {
+      // Fallback to rule-based categorization
+      finalCategory = categorizeExpense(description);
+    }
 
     addExpense({
       description: description.trim(),
@@ -34,16 +52,31 @@ const ExpenseEntry = () => {
     setDescription('');
     setAmount('');
     setCategory('');
+    setAiSuggestion('');
   };
 
-  const handleDescriptionChange = (e) => {
+  const handleDescriptionChange = async (e) => {
     const value = e.target.value;
     setDescription(value);
     
     // Auto-suggest category as user types
-    if (value.length > 2 && !category) {
-      const suggested = categorizeExpense(value);
-      // Don't auto-set, just show in placeholder
+    if (value.length > 3 && !category && amount) {
+      if (isGeminiInitialized()) {
+        // Show AI is thinking
+        setAiSuggestion('🤖 AI analyzing...');
+        try {
+          const suggested = await categorizeExpenseWithGemini(value, parseFloat(amount) || 0);
+          setAiSuggestion(`🤖 AI suggests: ${suggested}`);
+        } catch (error) {
+          const suggested = categorizeExpense(value);
+          setAiSuggestion(`AI suggests: ${suggested}`);
+        }
+      } else {
+        const suggested = categorizeExpense(value);
+        setAiSuggestion(`AI suggests: ${suggested}`);
+      }
+    } else if (value.length <= 3) {
+      setAiSuggestion('');
     }
   };
 

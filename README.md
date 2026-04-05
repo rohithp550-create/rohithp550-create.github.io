@@ -1,12 +1,21 @@
 # 💸 Financial Reality AI - Expense Tracker
 
-A brutally honest expense tracking app that tells you the truth about your spending habits. No sugar-coating, just facts and AI-powered insights.
+A brutally honest expense tracking app that tells you the truth about your spending habits. No sugar-coating, just facts and AI-powered insights powered by Google Gemini.
 
 ## 🌟 Features
 
+### 🤖 Gemini AI Integration (NEW!)
+- **Smart Expense Categorization**: Uses Google Gemini 1.5 Flash for intelligent expense categorization
+- **Personalized Financial Advice**: Get AI-generated, specific advice based on YOUR spending patterns
+- **Spending Insights**: AI analyzes your expenses and identifies patterns and concerns
+- **Expense Necessity Analysis**: AI rates whether expenses are essential or luxury
+- **Motivational Messages**: Context-aware encouragement based on your financial status
+
 ### Core Functionality
 - **Manual Expense Entry**: Add expenses with description and amount
-- **AI-Powered Categorization**: Automatically categorizes expenses based on description
+- **Dual AI Categorization**:
+  - **Gemini AI** (when API key provided): Advanced ML-based categorization
+  - **Rule-based AI** (fallback): Keyword-based categorization for 10+ categories
 - **Smart Category Detection**: Recognizes common merchants and services (Swiggy, Zomato, Uber, Netflix, etc.)
 - **Local Data Storage**: All data stored in browser localStorage - your privacy is protected
 
@@ -35,6 +44,38 @@ A brutally honest expense tracking app that tells you the truth about your spend
 ### Spending Analytics
 - **Category Breakdown**: Visual breakdown of spending by category
 - **Top 5 Categories**: See where most money goes
+## 🤖 Setting Up Gemini AI
+
+### Get Your Free API Key
+
+1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Sign in with your Google account
+3. Click "Get API Key" or "Create API Key"
+4. Copy your API key
+
+### Configure in App
+
+1. Open the app and go to **⚙️ Settings** tab
+2. Paste your Gemini API key
+3. Click "Save & Initialize"
+4. You'll see "✅ Gemini AI Active" when successful
+
+### Features Enabled with Gemini AI
+
+- **Smart Categorization**: More accurate expense categorization using ML
+- **Personalized Advice**: AI analyzes your spending and provides specific recommendations
+- **Pattern Recognition**: Identifies spending habits and red flags
+- **Necessity Analysis**: Rates whether expenses are essential or luxury
+- **Context-Aware Messages**: Motivational messages tailored to your financial status
+
+### Privacy & Security
+
+- Your API key is stored locally in your browser (localStorage)
+- Only you have access to your API key
+- Expense data is sent to Google Gemini API only for analysis
+- No data is stored on external servers
+- You can remove your API key anytime from Settings
+
 - **Daily Average**: Track daily spending patterns
 - **Time-Based Tracking**: Shows how many days you've been tracking
 

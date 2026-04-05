@@ -11,8 +11,9 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
-  "homepage": "https://rohithp550-create.github.io/Expense-Split/",
+  "homepage": "https://rohithp550-create.github.io/",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
