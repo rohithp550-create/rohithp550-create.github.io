@@ -7,7 +7,7 @@ let model = null;
 export const initializeGemini = (apiKey) => {
   try {
     genAI = new GoogleGenerativeAI(apiKey);
-    model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+    model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
     return true;
   } catch (error) {
     console.error('Failed to initialize Gemini:', error);
