@@ -8,6 +8,7 @@ export const initializeGemini = (apiKey) => {
   try {
     genAI = new GoogleGenerativeAI(apiKey);
     model = genAI.getGenerativeModel({ model: 'gemini-3-flash-preview' });
+    console.log('Gemini AI initialized successfully');
     return true;
   } catch (error) {
     console.error('Failed to initialize Gemini:', error);
@@ -113,7 +114,7 @@ INSIGHT: [surprising insight]`;
 };
 
 // Get smart spending insights using Gemini AI
-export const getSpendingInsights = async (expenses, timeframe = '30 days') => {
+export const getSpendingInsights = async (expenses) => {
   if (!model) {
     throw new Error('Gemini AI not initialized. Please add your API key.');
   }

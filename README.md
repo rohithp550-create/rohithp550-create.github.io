@@ -6,8 +6,9 @@ A brutally honest expense tracking app that tells you the truth about your spend
 
 ### 🤖 Gemini AI Integration (NEW!)
 - **Smart Expense Categorization**: Uses Google Gemini 1.5 Flash for intelligent expense categorization
-- **Personalized Financial Advice**: Get AI-generated, specific advice based on YOUR spending patterns
-- **Spending Insights**: AI analyzes your expenses and identifies patterns and concerns
+- **Dashboard AI Advisor**: Real-time personalized financial advice displayed on your dashboard
+- **AI Spending Analysis**: Automatic pattern recognition and spending insights on dashboard
+- **Personalized Recommendations**: AI-generated action items based on YOUR spending patterns
 - **Expense Necessity Analysis**: AI rates whether expenses are essential or luxury
 - **Motivational Messages**: Context-aware encouragement based on your financial status
 
@@ -62,9 +63,22 @@ A brutally honest expense tracking app that tells you the truth about your spend
 
 ### Features Enabled with Gemini AI
 
+#### In Expense Entry:
 - **Smart Categorization**: More accurate expense categorization using ML
-- **Personalized Advice**: AI analyzes your spending and provides specific recommendations
-- **Pattern Recognition**: Identifies spending habits and red flags
+- **Context Understanding**: Recognizes complex descriptions and occasions
+
+#### On Dashboard (NEW!):
+- **🤖 AI Financial Advisor Card**:
+  - Real-time assessment of your financial health
+  - Specific action items tailored to your spending
+  - Key insights about your financial behavior
+- **🔍 AI Spending Analysis Card**:
+  - Automatic pattern recognition in your expenses
+  - Identifies concerning trends and positive habits
+  - Provides context-aware observations
+- **Auto-Refresh**: AI insights update automatically when you add new expenses
+
+#### Additional Features:
 - **Necessity Analysis**: Rates whether expenses are essential or luxury
 - **Context-Aware Messages**: Motivational messages tailored to your financial status
 

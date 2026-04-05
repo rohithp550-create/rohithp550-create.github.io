@@ -1,7 +1,8 @@
 import './Dashboard.css';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { analyzeFinancialReality, getMotivationalMessage } from '../utils/financialRealityAI';
+import { getSpendingInsights as getGeminiSpendingInsights, getPersonalizedAdvice, isGeminiInitialized } from '../utils/geminiAI';
 
 import { getSpendingInsights } from '../utils/aiCategorizer';
 import { useExpenses } from '../context/ExpenseContext';
@@ -9,9 +10,43 @@ import { useExpenses } from '../context/ExpenseContext';
 const Dashboard = () => {
   const { expenses, monthlyIncome } = useExpenses();
   const [showDetails, setShowDetails] = useState(false);
+  const [geminiAdvice, setGeminiAdvice] = useState(null);
+  const [geminiInsights, setGeminiInsights] = useState(null);
+  const [loadingGemini, setLoadingGemini] = useState(false);
 
   const insights = getSpendingInsights(expenses, monthlyIncome);
   const reality = analyzeFinancialReality(expenses, monthlyIncome);
+
+  // Fetch Gemini AI insights when expenses change
+  useEffect(() => {
+    const fetchGeminiData = async () => {
+      if (!isGeminiInitialized() || expenses.length === 0) {
+        setGeminiAdvice(null);
+        setGeminiInsights(null);
+        return;
+      }
+
+      setLoadingGemini(true);
+      try {
+        // Get personalized advice
+        const spendingRatio = (reality.currentSpending / monthlyIncome) * 100;
+        const advice = await getPersonalizedAdvice(expenses, monthlyIncome, spendingRatio);
+        setGeminiAdvice(advice);
+
+        // Get spending insights
+        const aiInsights = await getGeminiSpendingInsights(expenses);
+        setGeminiInsights(aiInsights);
+      } catch (error) {
+        console.error('Failed to fetch Gemini insights:', error);
+        setGeminiAdvice(null);
+        setGeminiInsights(null);
+      } finally {
+        setLoadingGemini(false);
+      }
+    };
+
+    fetchGeminiData();
+  }, [expenses, monthlyIncome, reality.currentSpending]);
 
   const getSeverityColor = (severity) => {
     const colors = {
@@ -83,9 +118,61 @@ const Dashboard = () => {
             </div>
           </div>
         )}
-      </div>
-
-      {/* 3-Month Predictions */}
+        </div>
+  
+        {/* Gemini AI Personalized Advice */}
+        {isGeminiInitialized() && geminiAdvice && (
+          <div className="gemini-advice-card">
+            <div className="gemini-header">
+              <h2>🤖 AI Financial Advisor</h2>
+              <span className="gemini-badge">Powered by Gemini</span>
+            </div>
+            
+            <div className="gemini-assessment">
+              <h3>Assessment</h3>
+              <p>{geminiAdvice.assessment}</p>
+            </div>
+  
+            {geminiAdvice.actions && geminiAdvice.actions.length > 0 && (
+              <div className="gemini-actions">
+                <h3>Recommended Actions</h3>
+                <ul>
+                  {geminiAdvice.actions.map((action, index) => (
+                    <li key={index}>{action}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+  
+            {geminiAdvice.insight && (
+              <div className="gemini-insight">
+                <h3>💡 Key Insight</h3>
+                <p>{geminiAdvice.insight}</p>
+              </div>
+            )}
+          </div>
+        )}
+  
+        {/* Gemini AI Spending Insights */}
+        {isGeminiInitialized() && geminiInsights && (
+          <div className="gemini-insights-card">
+            <div className="gemini-header">
+              <h2>🔍 AI Spending Analysis</h2>
+              <span className="gemini-badge">Powered by Gemini</span>
+            </div>
+            <p className="gemini-insights-text">{geminiInsights}</p>
+          </div>
+        )}
+  
+        {/* Loading State for Gemini */}
+        {isGeminiInitialized() && loadingGemini && expenses.length > 0 && (
+          <div className="gemini-loading-card">
+            <div className="loading-spinner"></div>
+            <p>AI is analyzing your spending patterns...</p>
+          </div>
+        )}
+  
+        {/* 3-Month Predictions */}
       {reality.predictions && (
         <div className="predictions-card">
           <h2>📊 Your Financial Future</h2>
